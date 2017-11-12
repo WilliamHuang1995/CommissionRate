@@ -42,8 +42,17 @@ public class Employee {
         }
         addRevenue(revenue);
     }
-    public ArrayList getCustomers(){
+    public ArrayList<String> getCustomers(){
         return customersList;
+    }
+    public Customer customer(String customer){
+        for(int i = 0 ;i < customers.size();i++){
+            Customer cust = customers.get(i);
+            if(cust.toString().equals(customer)){
+                return cust;
+            }
+        }
+        return null;
     }
 
     public void addRevenue(double revenue){
@@ -54,9 +63,9 @@ public class Employee {
         return getName();
     }
 
-    private class Customer {
+    public class Customer {
         private String name;
-        private HashMap<String,Double> productAndRevenue = new HashMap();
+        public HashMap<String,Double> productAndRevenue = new HashMap();
 
         public Customer(){
             this.name = "";
