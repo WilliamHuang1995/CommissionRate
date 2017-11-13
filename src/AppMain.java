@@ -6,7 +6,7 @@ public class AppMain {
         String output = "C:\\Users\\willi\\Documents\\Projects\\Commission Calculator\\src\\output.xls";
         File fin = new File(input);
         File fout = new File(output);
-        ExcelReader main = new ExcelReader(fin,fout);
+        Parser main = new Parser(fin,fout);
         main.run();
 
     }

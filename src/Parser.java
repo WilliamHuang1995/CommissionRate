@@ -9,39 +9,43 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ExcelReader {
-    static HSSFSheet spreadsheet;
-    static HSSFWorkbook workbook;
-    static Row row;
-    static ArrayList<Employee> employeeList = new ArrayList<>();
-    static ArrayList<String> nameList = new ArrayList<>();
-    static FileOutputStream fos;
-    static FileInputStream fis;
+public class Parser {
+    static ArrayList<Employee> employeeList;
+    static ArrayList<String> nameList;
     private static File input;
     private static File output;
 
-    public ExcelReader(){
+    public Parser(){
+        this.input = null;
+        this.output = null;
+        nameList = null;
+        employeeList = null;
 
     }
 
-    public ExcelReader(File input, File output){
+    public Parser(File input, File output){
         this.input = input;
         this.output = output;
+        nameList = new ArrayList<>();
+        employeeList = new ArrayList<>();
     }
 
     public static void run(){
+        FileInputStream fis = null;
         try {
             fis = new FileInputStream(input);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        HSSFWorkbook workbook = null;
         try {
             workbook = new HSSFWorkbook(fis);
         } catch (IOException e ) {
             e.printStackTrace();
         }
         //Spreadsheet needs to be in first slot.
-        spreadsheet = workbook.getSheetAt(0);;
+        HSSFSheet spreadsheet = workbook.getSheetAt(0);
+        ;
         Iterator<Row> rowIterator = spreadsheet.iterator();
         rowIterator.next();
         parseSpreadsheet(rowIterator);
@@ -53,7 +57,7 @@ public class ExcelReader {
         try {
             fis.close();
         }catch(IOException e){
-
+            e.printStackTrace();
         }
 
     }
@@ -64,7 +68,7 @@ public class ExcelReader {
         String productName;
         double revenue;
         while(rowIterator.hasNext()) {
-            row = rowIterator.next();
+            Row row = rowIterator.next();
             employee = row.getCell(0).toString();
             customer = row.getCell(2).toString();
             productName = row.getCell(4).toString();
@@ -97,7 +101,7 @@ public class ExcelReader {
         }
     }
     private static void outputSpreadsheet() throws IOException {
-         fos = new FileOutputStream(output);
+        FileOutputStream fos = new FileOutputStream(output);
         HSSFWorkbook wb = new HSSFWorkbook();
         HSSFSheet ss = wb.createSheet("Output");
         int rowSize = 0;
