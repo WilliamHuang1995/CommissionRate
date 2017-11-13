@@ -14,22 +14,18 @@ public class Parser {
     static ArrayList<String> nameList;
     private static File input;
     private static File output;
-
     public Parser(){
         this.input = null;
         this.output = null;
         nameList = null;
         employeeList = null;
-
     }
-
     public Parser(File input, File output){
         this.input = input;
         this.output = output;
         nameList = new ArrayList<>();
         employeeList = new ArrayList<>();
     }
-
     public static void run(){
         FileInputStream fis = null;
         try {
@@ -61,7 +57,6 @@ public class Parser {
         }
 
     }
-
     private static void parseSpreadsheet(Iterator<Row> rowIterator) {
         String employee;
         String customer;
