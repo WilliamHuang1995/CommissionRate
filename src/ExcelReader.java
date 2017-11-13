@@ -8,7 +8,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 public class ExcelReader {
     static HSSFSheet spreadsheet;
@@ -16,11 +15,23 @@ public class ExcelReader {
     static Row row;
     static ArrayList<Employee> employeeList = new ArrayList<>();
     static ArrayList<String> nameList = new ArrayList<>();
+    static FileOutputStream fos;
+    static FileInputStream fis;
+    private static File input;
+    private static File output;
 
-    public static void main(String[] args){
-        FileInputStream fis = null;
+    public ExcelReader(){
+
+    }
+
+    public ExcelReader(File input, File output){
+        this.input = input;
+        this.output = output;
+    }
+
+    public static void run(){
         try {
-            fis = new FileInputStream(new File("C:\\Users\\willi\\Documents\\Projects\\Commission Calculator\\src\\test.xls"));
+            fis = new FileInputStream(input);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -86,7 +97,7 @@ public class ExcelReader {
         }
     }
     private static void outputSpreadsheet() throws IOException {
-        FileOutputStream fos = new FileOutputStream(new File("C:\\Users\\willi\\Documents\\Projects\\Commission Calculator\\src\\output.xls"));
+         fos = new FileOutputStream(output);
         HSSFWorkbook wb = new HSSFWorkbook();
         HSSFSheet ss = wb.createSheet("Output");
         int rowSize = 0;
