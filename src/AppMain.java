@@ -52,7 +52,7 @@ public class AppMain {
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 if (fc.showOpenDialog(openFileChooser) == JFileChooser.APPROVE_OPTION) {
                     String sf = fc.getSelectedFile().getAbsolutePath();
-                    t2.setText(sf);
+                    t2.setText(sf+"\\Output.xls");
                 }
             }
         });
@@ -61,9 +61,13 @@ public class AppMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fin = new File(t1.getText());
-                fout = new File(t2.getText()+"\\Output.xls");
+                fout = new File(t2.getText());
                 Parser main = new Parser(fin, fout);
-                main.run();
+                if(main.run()){
+                    JOptionPane.showMessageDialog(null, "程式執行成功！");
+                }else{
+                    JOptionPane.showMessageDialog(null, "程式出錯！");
+                }
                 ok.setVisible(false);
                 System.exit(0);
 
@@ -78,8 +82,7 @@ public class AppMain {
         middlePanel.add(openFileChooser2);
         window.add(BorderLayout.SOUTH,bottomPanel);
         bottomPanel.add(ok);
-
-        window.setSize(250, 250);
+        window.setSize(400, 250);
         window.setResizable(false);
         window.setVisible(true);
         window.setLocationRelativeTo(null);
@@ -87,3 +90,4 @@ public class AppMain {
 
     }
 }
+
