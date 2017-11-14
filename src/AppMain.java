@@ -66,7 +66,7 @@ public class AppMain {
                 if(main.run()){
                     JOptionPane.showMessageDialog(null, "程式執行成功！");
                 }else{
-                    JOptionPane.showMessageDialog(null, "程式出錯！");
+                    JOptionPane.showMessageDialog(null, "程式出錯！請確保檔案目前沒有正被使用！");
                 }
                 ok.setVisible(false);
                 System.exit(0);
