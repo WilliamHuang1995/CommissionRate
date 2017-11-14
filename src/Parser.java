@@ -72,19 +72,18 @@ public class Parser {
             productName = row.getCell(4).toString();
             revenue = row.getCell(9).getNumericCellValue();
             if (productName.contains("硬化劑") || productName.contains("發泡劑") || productName.contains("設備") || productName.contains("薄膜")) {
-                //do things
-                if (!nameList.contains(employee)) {
-                    Employee emp = new Employee(employee);
+                if (!nameList.contains(employee.toUpperCase())) {
+                    Employee emp = new Employee(employee.toUpperCase());
 
                     employeeList.add(emp);
-                    nameList.add(employee);
+                    nameList.add(employee.toUpperCase());
 
                     emp.addProductToCustomer(productName, customer, revenue);
 
                 } else {
                     for (int i = 0; i < employeeList.size(); i++) {
                         Employee emp = employeeList.get(i);
-                        if (employeeList.get(i).getName().equals(employee)) {
+                        if (employeeList.get(i).getName().equals(employee.toUpperCase())) {
 
                             emp.addProductToCustomer(productName, customer, revenue);
                             break;
@@ -94,24 +93,23 @@ public class Parser {
 
                 }
 
-                System.out.println(employee + " " + customer + " " + productName + " " + revenue);
+                //System.out.println(employee + " " + customer + " " + productName + " " + revenue);
             }
         }
     }
     private static void outputSpreadsheet() throws IOException {
         FileOutputStream fos = new FileOutputStream(output);
-        HSSFWorkbook wb;
+        HSSFWorkbook wb = new HSSFWorkbook();
         HSSFSheet ss;
-        wb = new HSSFWorkbook();
-        ss = wb.createSheet("Output1");
-        int rowSize = 0;
-        Row row = ss.createRow(rowSize++);
-        String[] header = {"業務","客戶","產品","金額","2%佣金","3%佣金","5%佣金","Subtotal"};
-        for(int i = 0; i<header.length;i++){
-            row.createCell(i).setCellValue(header[i]);
-        }
         for(int i= 0;i<employeeList.size();i++){
             Employee emp = employeeList.get(i);
+            ss = wb.createSheet(emp.getName());
+            int rowSize = 0;
+            Row row = ss.createRow(rowSize++);
+            String[] header = {"業務","客戶","產品","金額","2%佣金","3%佣金","5%佣金","Subtotal"};
+            for(int k = 0; k<header.length;k++){
+                row.createCell(k).setCellValue(header[k]);
+            }
             ArrayList<String> customerList = emp.getCustomers();
             for(int j = 0; j<customerList.size();j++){
                 String customer = customerList.get(j);
