@@ -14,6 +14,7 @@ public class Parser {
     static ArrayList<String> nameList;
     private static File input;
     private static File output;
+    private static boolean outputExist;
     public Parser(){
         this.input = null;
         this.output = null;
@@ -23,21 +24,22 @@ public class Parser {
     public Parser(File input, File output){
         this.input = input;
         this.output = output;
+        this.outputExist = output.exists();
         nameList = new ArrayList<>();
         employeeList = new ArrayList<>();
     }
-    public static void run(){
+    public static boolean run(){
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(input);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            return false;
         }
         HSSFWorkbook workbook = null;
         try {
             workbook = new HSSFWorkbook(fis);
         } catch (IOException e ) {
-            e.printStackTrace();
+            return false;
         }
         //Spreadsheet needs to be in first slot.
         HSSFSheet spreadsheet = workbook.getSheetAt(0);
@@ -48,13 +50,14 @@ public class Parser {
         try {
             outputSpreadsheet();
         }catch(IOException e){
-            e.printStackTrace();
+            return false;
         }
         try {
             fis.close();
         }catch(IOException e){
-            e.printStackTrace();
+            return false;
         }
+        return true;
 
     }
     private static void parseSpreadsheet(Iterator<Row> rowIterator) {
@@ -97,8 +100,10 @@ public class Parser {
     }
     private static void outputSpreadsheet() throws IOException {
         FileOutputStream fos = new FileOutputStream(output);
-        HSSFWorkbook wb = new HSSFWorkbook();
-        HSSFSheet ss = wb.createSheet("Output");
+        HSSFWorkbook wb;
+        HSSFSheet ss;
+        wb = new HSSFWorkbook();
+        ss = wb.createSheet("Output1");
         int rowSize = 0;
         Row row = ss.createRow(rowSize++);
         String[] header = {"業務","客戶","產品","金額","2%佣金","3%佣金","5%佣金","Subtotal"};
