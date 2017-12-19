@@ -1,5 +1,55 @@
 import openpyxl
+from tkinter import *
+from tkinter import filedialog
 
+class GUI:
+    def __init__(self, master):
+        self.master = master
+        master.title("Commission Calculator")
+        
+        self.select_button = Button(master, text="Select Input", command=self.selectI).grid(row=0)
+        self.input_label = Label(master,text="",anchor="w",width=50)
+        self.input_label.grid(row=0,column=1)
+        self.output_button = Button(master, text="Select Output", command=self.selectO).grid(row=1)
+        self.output_label = Label(master, text="",anchor="w",width=50)
+        self.output_label.grid(row=1,column=1)
+        self.run_button = Button(master,text="Run!",command=main).grid(row=2)
+        self.close_button = Button(master, text="Close", command=master.quit).grid(row=2,column=1)
+        
+    def selectI(self):
+        global path
+        fn = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("Excel 2010 Files","*.xlsx"),("All Files","*.*")))
+        self.input_label['text'] = fn
+        path = self.input_label['text']
+        return fn
+    def selectO(self):
+        global dest
+        fn = filedialog.askdirectory()
+        self.output_label['text'] = fn+'/Output.xlsx'
+        dest = self.output_label['text']
+        return fn
+
+def main():
+    global my_gui
+    if not path or not dest:
+        print('input or output not set properly!')
+        return
+    # open workbook with only data in cells
+    wb = openpyxl.load_workbook(path, data_only=True)
+    # get first worksheet name
+    wsn = wb.get_sheet_names()[0]
+    # so I can get worksheet
+    ws = wb.get_sheet_by_name(wsn)
+    dictionary = processData(ws)
+    ## create workbook
+    owb = openpyxl.Workbook()
+    outputData(dictionary,owb)
+    #remove default sheet that Workbook creates
+    owb.remove_sheet(owb.get_sheet_by_name('Sheet'))
+    owb.save(filename=dest)
+    my_gui.output_label['text']='Success'
+    my_gui.input_label['text']='Success'
+    
 def processData(ws):
     employeeList = {}
     # loop thru row and columns
@@ -28,7 +78,8 @@ def processData(ws):
                         cus[customer][product] += revenue
     return employeeList
 
-def outputData(dictionary):
+def outputData(dictionary,owb):
+    header = ['','業務','客戶','產品','金額','2%佣金','3%佣金','5%佣金','Subtotal']
     ## for each employee listed
     for employee in dictionary:
         ows = owb.create_sheet(title=employee)
@@ -51,20 +102,12 @@ def outputData(dictionary):
                     for i in range(len(values)):
                         ows.cell(row=row,column=col+i).value = values[i]
                     row += 1
+path = ''
+dest = ''
+root = Tk()
+my_gui = GUI(root)
+root.mainloop()
+root.destroy()
 
-path = r'C:\Users\willi\Documents\test.xlsx'
-dest = r'C:\Users\willi\Documents\PythonOutput.xlsx'
-header = ['','業務','客戶','產品','金額','2%佣金','3%佣金','5%佣金','Subtotal']
-# open workbook with only data in cells
-wb = openpyxl.load_workbook(path, data_only=True)
-# get first worksheet name
-wsn = wb.get_sheet_names()[0]
-# so I can get worksheet
-ws = wb.get_sheet_by_name(wsn)
-dictionary = processData(ws)
-## create workbook
-owb = openpyxl.Workbook()
-outputData(dictionary)
-#remove default sheet that Workbook creates
-owb.remove_sheet(owb.get_sheet_by_name('Sheet'))
-owb.save(filename=dest)
+
+
