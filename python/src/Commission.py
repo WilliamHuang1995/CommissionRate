@@ -56,7 +56,7 @@ def main():
 
 
 def process_data(ws):
-    employee_list = {}
+    employee_dict = {}
     # loop through row and columns
     for row in ws.iter_rows('A{}:J{}'.format(ws.min_row + 1, ws.max_row)):
         employee = row[0].value.title()
@@ -66,11 +66,12 @@ def process_data(ws):
         # check if contain keywords
         if any(p in product for p in ('硬化劑', '發泡劑', '設備', '薄膜')):
             # check if employee already added
-            if not any(emp for emp in employee_list if emp == employee):
-                employee_list[employee] = [{customer: {product: revenue}}]
+            # if not any(emp for emp in employee_dict if emp == employee):
+            if employee not in employee_dict.keys():
+                employee_dict[employee] = [{customer: {product: revenue}}]
             else:
                 # check if customer already added
-                sales_report = employee_list[employee]
+                sales_report = employee_dict[employee]
                 # if there is no existing customer
                 if not any(cus for cus in sales_report if customer in cus):
                     sales_report.append({customer: {product: revenue}})
@@ -81,7 +82,7 @@ def process_data(ws):
                         cus[customer][product] = revenue
                     else:
                         cus[customer][product] += revenue
-    return employee_list
+    return employee_dict
 
 
 def output_data(dictionary, owb):
