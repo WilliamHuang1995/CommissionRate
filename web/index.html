@@ -15,19 +15,17 @@
 <body>
   <div class="center container">
     <h1 class="blue-text">Commission Calculator</h1>
-    <!-- <a id="input" class="waves-effect waves-light btn-large">Select Input File</a>
-    <a id="output" class="waves-effect waves-light btn-large">Select Output Folder</a> -->
     <div class="file-field input-field">
       <div class="btn">
         <span>File</span>
-        <input type="file" accept=".xlsx">
+        <input type="file" accept=".xlsx" id="input">
       </div>
       <div class="file-path-wrapper">
         <input class="file-path validate" type="text" placeholder="Upload your .xlsx Excel File">
       </div>
     </div>
 
-    <button class="btn waves-effect waves-light" name="action">Submit
+    <button class="btn waves-effect waves-light" id="submit">Submit
       </button>
   </div>
 
@@ -36,8 +34,11 @@
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 
+  <!-- Excel JS -->
+  <script src="dist/xlsx.full.min.js"></script>
+
   <!-- Main Logic -->
-  <script src="app.js"></script>
+  <script src="app2.js"></script>
 </body>
 
 </html>
