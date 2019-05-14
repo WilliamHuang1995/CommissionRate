@@ -8,8 +8,39 @@
       id="dropzone"
       :options="dropzoneOptions"
     ></vue-dropzone>
-    <json-viewer v-show="!loaded" :value="computedArray" :expand-depth="4" copyable></json-viewer>
+    <!-- <json-viewer v-show="!loaded" :value="computedArray" :expand-depth="4" copyable></json-viewer> -->
+    <table v-if="array">
+      <tbody>
+        <tr>
+          <th>業務員</th>
+          <th>客戶簡稱</th>
+          <th>貨品名稱</th>
+          <th>銷貨金額</th>
+          <th>0.5%</th>
+          <th>1.5%</th>
+          <th>3.0%</th>
+          <th>5.0%</th>
+        </tr>
+        <template v-for="(employees,ekey) in computedArray">
+          <template v-for="(customer,ckey) in computedArray[ekey]">
+            <template v-for="(product,pkey,i) in computedArray[ekey][ckey]">
+              <tr :key="i">
+                <td>{{ekey}}</td>
+                <td>{{ckey}}</td>
+                <td>{{pkey}}</td>
+                <td>{{product['0.5%'].toFixed(2)}}</td>
+                <td>{{product['1.5%'].toFixed(2)}}</td>
+                <td>{{product['3.0%'].toFixed(2)}}</td>
+                <td>{{product['3.5%'].toFixed(2)}}</td>
+                <td>{{product['5.0%'].toFixed(2)}}</td>
+              </tr>
+            </template>
+          </template>
+        </template>
+      </tbody>
+    </table>
   </div>
+  <!-- use this https://tonygermaneri.github.io/canvas-datagrid/tutorials/vueExample.html -->
 </template>
 
 <script>
@@ -125,7 +156,7 @@ export default {
             };
           }
         }
-
+        var final = [];
         return result;
       }
       return "";
@@ -198,5 +229,9 @@ export default {
 .dropzone .dz-message {
   text-align: center;
   margin: 50vh;
+}
+table {
+  width: 100%;
+  text-align: center;
 }
 </style>
