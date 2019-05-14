@@ -5,7 +5,7 @@ poi-3.17/
 node_modules/
 .DS_Store
 node_modules
-/dist
+web/dist
 
 # local env files
 .env.local
