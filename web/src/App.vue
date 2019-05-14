@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <h1 v-show="loaded">Please upload only Excel File, make sure raw data is on the first sheet.</h1>
     <vue-dropzone
       v-show="loaded"
       @vdropzone-success="onSuccess"
@@ -7,30 +8,7 @@
       id="dropzone"
       :options="dropzoneOptions"
     ></vue-dropzone>
-    <table v-show="!loaded">
-      <tr>
-        <th>業務員</th>
-        <th>客戶簡稱</th>
-        <th>貨品名稱</th>
-        <th>銷貨金額</th>
-      </tr>
-      <!-- <tr v-for="(item,i) in computedArray" :key="i">
-        <td>{{item.employee}}</td>
-        <td>{{item.customer}}</td>
-        <td>{{item.product}}</td>
-        <td>{{item.revenue}}</td>
-      </tr>-->
-    </table>
-    <div v-for="(value,key,index) in computedArray" :key="index">
-      {{key}}
-      <div v-for="(value2,key2,index2) in computedArray[key]" :key="index2">
-        {{key2}}
-        <div v-for="(value3,key3,index3) in computedArray[key][key2]" :key="index3">
-          {{key3}}
-          <div>{{value3}}</div>
-        </div>
-      </div>
-    </div>
+    <json-viewer v-show="!loaded" :value="computedArray" :expand-depth="4" copyable></json-viewer>
   </div>
 </template>
 
@@ -39,10 +17,13 @@
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import XLSX from "xlsx";
+import JsonViewer from "vue-json-viewer";
+import "vue-json-viewer/style.css";
 export default {
   name: "app",
   components: {
-    vueDropzone: vue2Dropzone
+    vueDropzone: vue2Dropzone,
+    JsonViewer
   },
   data() {
     return {
@@ -95,27 +76,87 @@ export default {
               // if product exists
               if (result[object.employee][object.customer][object.product]) {
                 // add revenue
-                result[object.employee][object.customer][object.product] +=
-                  object.revenue;
+                var revenue =
+                  result[object.employee][object.customer][object.product][
+                    "原本"
+                  ] + object.revenue;
+                result[object.employee][object.customer][object.product] = {
+                  原本: revenue,
+                  "0.5%": revenue * 0.005,
+                  "1.5%": revenue * 0.015,
+                  "3.0%": revenue * 0.03,
+                  "3.5%": revenue * 0.035,
+                  "5.0%": revenue * 0.05
+                };
               } else {
-                result[object.employee][object.customer][object.product] =
-                  object.revenue;
+                result[object.employee][object.customer][object.product] = {
+                  原本: object.revenue,
+                  "0.5%": object.revenue * 0.005,
+                  "1.5%": object.revenue * 0.015,
+                  "3.0%": object.revenue * 0.03,
+                  "3.5%": object.revenue * 0.035,
+                  "5.0%": object.revenue * 0.05
+                };
               }
             } else {
               result[object.employee][object.customer] = {
-                [object.product]: object.revenue
+                [object.product]: {
+                  原本: object.revenue,
+                  "0.5%": object.revenue * 0.005,
+                  "1.5%": object.revenue * 0.015,
+                  "3.0%": object.revenue * 0.03,
+                  "3.5%": object.revenue * 0.035,
+                  "5.0%": object.revenue * 0.05
+                }
               };
             }
           } else {
             result[object.employee] = {
               [object.customer]: {
-                [object.product]: object.revenue
+                [object.product]: {
+                  原本: object.revenue,
+                  "0.5%": object.revenue * 0.005,
+                  "1.5%": object.revenue * 0.015,
+                  "3.0%": object.revenue * 0.03,
+                  "3.5%": object.revenue * 0.035,
+                  "5.0%": object.revenue * 0.05
+                }
               }
             };
           }
         }
 
         return result;
+      }
+      return "";
+    },
+    computedArray2() {
+      if (this.array) {
+        return this.array
+          .filter(ele => {
+            return this.commissionedItems.some(item =>
+              ele["貨品名稱"].includes(item)
+            );
+          })
+          .map(ele => {
+            return {
+              employee: ele["業務員"],
+              customer: ele["客戶簡稱"],
+              product: ele["貨品名稱"],
+              revenue: ele["銷貨金額"]
+            };
+          })
+          .sort((a, b) => {
+            let empA = a.employee.toUpperCase();
+            let empB = b.employee.toUpperCase();
+            let comparison = 0;
+            if (empA > empB) {
+              comparison = 1;
+            } else if (empA < empB) {
+              comparison = -1;
+            }
+            return comparison;
+          });
       }
       return "";
     }
@@ -131,6 +172,7 @@ export default {
         var sheet1 = workbook.SheetNames[0];
         var worksheet = workbook.Sheets[sheet1];
         vm.array = XLSX.utils.sheet_to_json(worksheet);
+        console.log(vm.array);
         vm.loaded = false;
       };
       reader.readAsArrayBuffer(f);
@@ -144,11 +186,11 @@ export default {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
 * {
   margin: 0;
+  box-sizing: border-box;
 }
 #dropzone {
   height: 100vh;
