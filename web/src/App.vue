@@ -1,13 +1,37 @@
 <template>
   <div id="app">
-    <h1 v-show="loaded">Please upload only Excel File, make sure raw data is on the first sheet.</h1>
-    <vue-dropzone
-      v-show="loaded"
-      @vdropzone-success="onSuccess"
-      ref="myVueDropzone"
-      id="dropzone"
-      :options="dropzoneOptions"
-    ></vue-dropzone>
+    <div v-show="loaded" class="landing">
+      <h1>Commission Rate</h1>
+      <p>a time-saving application that calculates commissions for employees.</p>
+      <vue-dropzone
+        @vdropzone-success="onSuccess"
+        ref="myVueDropzone"
+        id="dropzone"
+        :options="dropzoneOptions"
+      ></vue-dropzone>
+      <ol>
+        <li>Upload an excel (.xlsx) file. File should be no larger than 5MB.</li>
+        <li>Make sure the first sheet is the one you want the application to read</li>
+        <li>
+          <p>Make sure you have the following fields (having more fields is okay):</p>
+          <ul>
+            <li>業務員</li>
+            <li>客戶簡稱</li>
+            <li>貨品名稱</li>
+            <li>銷貨金額</li>
+          </ul>
+        </li>
+        <li>
+          <p>Make sure the commissioned items contain the following words:</p>
+          <ul>
+            <li>硬化劑</li>
+            <li>發泡劑</li>
+            <li>設備</li>
+            <li>薄膜</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
     <table v-if="array">
       <tbody>
         <tr>
@@ -53,7 +77,7 @@ export default {
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 150,
-        maxFilesize: 0.5
+        maxFilesize: 5.0
       },
       commissionedItems: ["硬化劑", "發泡劑", "設備", "薄膜"],
       array: "",
@@ -195,21 +219,43 @@ export default {
 
 <style>
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+}
+.landing {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  background: black;
+  background-size: cover;
+}
+ul li {
+  display: inline-block;
+  padding: 10px;
+}
+ol {
+  margin-top: 1em;
+}
+ol li {
+  line-height: 2em;
+}
+p {
+  margin-bottom: 1em;
 }
 * {
   margin: 0;
   box-sizing: border-box;
 }
 #dropzone {
-  height: 100vh;
+  height: 20vh;
+  width: 40vw;
 }
 .dropzone .dz-message {
   text-align: center;
-  margin: 50vh;
 }
 table {
   width: 100%;
