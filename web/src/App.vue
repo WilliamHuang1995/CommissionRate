@@ -18,6 +18,7 @@
           <th>0.5%</th>
           <th>1.5%</th>
           <th>3.0%</th>
+          <th>3.5%</th>
           <th>5.0%</th>
         </tr>
 
@@ -30,6 +31,7 @@
           <td>{{item[5]}}</td>
           <td>{{item[6]}}</td>
           <td>{{item[7]}}</td>
+          <td>{{item[8]}}</td>
         </tr>
       </tbody>
     </table>
@@ -155,6 +157,7 @@ export default {
             for (const [product, revenue] of products) {
               final.push([
                 employee,
+                customer,
                 product,
                 revenue["原本"].toFixed(2),
                 revenue["0.5%"].toFixed(2),
@@ -210,6 +213,18 @@ export default {
 }
 table {
   width: 100%;
-  text-align: center;
+  border-collapse: collapse;
+}
+table > tbody > tr > th {
+  background-color: #8ce1da;
+}
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+tr:hover {
+  background-color: #f5f5f5;
 }
 </style>
