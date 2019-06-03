@@ -59,6 +59,9 @@
         </tr>
       </tbody>
     </table>
+    <div v-if="array" class="center">
+      <button @click="download">Download</button>
+    </div>
   </div>
 </template>
 
@@ -212,6 +215,18 @@ export default {
         vm.loaded = false;
       };
       reader.readAsArrayBuffer(f);
+    },
+    download() {
+      let csvContent =
+        "data:text/csv;charset=utf-8," +
+        "業務員,客戶簡稱,貨品名稱,銷貨金額,0.5%,1.5%,3.0%,3.5%,5.0%\n" +
+        this.computedArray.map(e => e.join(",")).join("\n");
+      var encodedUri = encodeURI(csvContent);
+      var link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "Output.csv");
+      document.body.appendChild(link);
+      link.click();
     }
   }
 };
@@ -272,5 +287,24 @@ td {
 }
 tr:hover {
   background-color: #f5f5f5;
+}
+
+button {
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 20px;
+  border-radius: 15px;
+}
+
+button:hover {
+  background-color: rgb(121, 138, 189);
+}
+
+.center {
+  display: flex;
+  justify-content: center;
 }
 </style>
