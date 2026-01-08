@@ -43,7 +43,6 @@ public class Parser {
         }
         //Spreadsheet needs to be in first slot.
         HSSFSheet spreadsheet = workbook.getSheetAt(0);
-        ;
         Iterator<Row> rowIterator = spreadsheet.iterator();
         rowIterator.next();
         parseSpreadsheet(rowIterator);
@@ -92,8 +91,6 @@ public class Parser {
 
 
                 }
-
-                //System.out.println(employee + " " + customer + " " + productName + " " + revenue);
             }
         }
     }

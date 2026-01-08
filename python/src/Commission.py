@@ -43,15 +43,15 @@ def main():
     # open workbook with only data in cells
     wb = openpyxl.load_workbook(path, data_only=True)
     # get first worksheet name
-    wsn = wb.get_sheet_names()[0]
+    wsn = wb.sheetnames[0]
     # so I can get worksheet
-    ws = wb.get_sheet_by_name(wsn)
+    ws = wb[wsn]
     dictionary = process_data(ws)
     # create workbook
     owb = openpyxl.Workbook()
     output_data(dictionary, owb)
     # remove default sheet that Workbook creates
-    owb.remove_sheet(owb.get_sheet_by_name('Sheet'))
+    owb.remove_sheet(owb['Sheet'])
     owb.save(filename=dest)
     # when successfully executed
     my_gui.output_label['text'] = 'Success'
