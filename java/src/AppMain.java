@@ -9,9 +9,6 @@ public class AppMain {
     static File fin;
     static File fout;
     public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
-        //Parser main = new Parser(fin,fout);
-        //main.run();
-
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         JFrame window = new JFrame("Commission");
         JPanel topPanel = new JPanel();
